@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Self-hosted variable fonts: no network, no tracking, offline-first */
+@font-face {
+  font-family: 'Cabin';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/cabin-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('/fonts/jost-latin.woff2') format('woff2');
+}
+
+:root {
+  --bg-obsidian: #09090b;
+  --surface-primary: #111113;
+  --surface-secondary: #161619;
+  --surface-tertiary: #1c1c20;
+  --surface-hover: #1e1e24;
+  --surface-active: #24242c;
+  --surface-border: #242429;
+  --surface-border-subtle: #1a1a1e;
+  --surface-border-highlight: #36363f;
+
+  --financial-positive: #10b981;
+  --financial-positive-bg: #06281e;
+  --financial-positive-border: #0e533c;
+  --financial-positive-text: #34d399;
+
+  --financial-negative: #ef4444;
+  --financial-negative-bg: #2e0b11;
+  --financial-negative-border: #711b25;
+  --financial-negative-text: #f87171;
+
+  --financial-warning: #f59e0b;
+  --financial-warning-bg: #2c1b04;
+  --financial-warning-border: #6b4308;
+  --financial-warning-text: #fbbf24;
+
+  --text-primary: #ededef;
+  --text-secondary: #9e9ea7;
+  --text-muted: #63636c;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-obsidian);
+  color: var(--text-primary);
+  font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 400;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Tabular figures for financial accuracy and clean column alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-family: 'Jost', 'SF Mono', Menlo, Monaco, monospace;
+}
+
+/* Accessible focus ring without tacky neon glow */
+:focus-visible {
+  outline: 2px solid #52525b;
+  outline-offset: 1px;
+}
+
+/* Custom precision scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #242429;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #383842;
+}
+
+/* Solid high-craft card surfaces */
+.craft-card {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+}
+
+.craft-card-inset {
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--surface-border-subtle);
+  border-radius: 6px;
+}
+
+.craft-card-interactive {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  transition: border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.craft-card-interactive:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--surface-border-highlight);
+}
+
+/* Micro metric badge */
+.metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Jost', 'SF Mono', monospace;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+/* Fast subtle transitions: opacity/border/background only, under 150ms */
+.transition-fast {
+  transition: opacity 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keyboard focus ring on every interactive element (Phase 6) */
+:focus-visible {
+  outline: 2px solid #52525b;
+  outline-offset: 1px;
+}

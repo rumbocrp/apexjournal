@@ -1,0 +1,73 @@
+[package]
+name = "apex-journal"
+version = "0.1.0"
+description = "High-performance AES-256 encrypted desktop financial journal for macOS"
+edition = "2021"
+authors = ["ApexJournal Team"]
+
+[lib]
+name = "apex_journal"
+path = "src/lib.rs"
+
+[[bin]]
+name = "apex-journal"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+# Tauri v2
+tauri = { version = "2.0", features = [] }
+tauri-plugin-shell = "2.0"
+tauri-plugin-dialog = "2.0"
+tauri-plugin-fs = "2.0"
+
+# Serialization & Concurrency
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.38", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.8", features = ["v4", "serde"] }
+
+# SQLCipher Database Engine (Vendored OpenSSL + SQLCipher C source)
+rusqlite = { version = "0.31", features = [
+    "bundled-sqlcipher-vendored-openssl",
+    "chrono",
+    "uuid",
+    "backup",
+    "hooks"
+] }
+
+# Cryptography, KDF & Memory Protection
+argon2 = { version = "0.5", features = ["std", "alloc"] }
+aes-gcm = { version = "0.10", features = ["std"] }
+zeroize = { version = "1.8", features = ["derive", "zeroize_derive"] }
+rand_core = { version = "0.6", features = ["getrandom", "std"] }
+subtle = "2.5"
+hex = "0.4"
+sha2 = "0.10"
+
+# Fixed-Point Decimal Arithmetic (SPEC Sistema de Luces §2.2: Bankers rounding)
+rust_decimal = { version = "1.36", features = ["serde"] }
+
+# Error Handling & Logging
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.11"
+
+# macOS Native Security (Keychain & Touch ID)
+[target.'cfg(target_os = "macos")'.dependencies]
+security-framework = "2.11"
+security-framework-sys = "2.11"
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSString", "NSError"] }
+block2 = "0.6"
+
+
+[dev-dependencies]
+tempfile = "3.10"
+
+[features]
+default = []
+mock-keychain = []

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Rust / Tauri build output (8GB+, reproducible via cargo)
+src-tauri/target/
+
+# Frontend build output (reproducible via pnpm build)
+dist/
+
+# Session scratch notes
+.scratch/
+
+# macOS
+.DS_Store
+
+# Logs & env
+*.log
+.env
+.env.local

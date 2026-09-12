@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "reference_date": "2026-09-01T12:00:00Z",
+  "notes": "Shared oracle for the AR-aging seam (Rust mem/SQL, harness oracle). Reference is midday UTC and all dates are whole days, so floor(ms/86400) equals calendar-day diff in every adapter. Amounts avoid .5 midpoints: fixtures pin bucket/traffic semantics, NOT Bankers rounding (pinned in Rust unit tests).",
+  "cases": [
+    {
+      "name": "boundaries",
+      "transactions": [
+        { "id": "b-0", "date": "2026-09-01", "type": "INCOME", "base_amount": 100.0, "status": "INVOICED" },
+        { "id": "b-30", "date": "2026-08-02", "type": "INCOME", "base_amount": 100.0, "status": "PENDING" },
+        { "id": "b-31", "date": "2026-08-01", "type": "INCOME", "base_amount": 100.0, "status": "INVOICED" },
+        { "id": "b-60", "date": "2026-07-03", "type": "INCOME", "base_amount": 100.0, "status": "PENDING" },
+        { "id": "b-61", "date": "2026-07-02", "type": "INCOME", "base_amount": 100.0, "status": "INVOICED" },
+        { "id": "b-90", "date": "2026-06-03", "type": "INCOME", "base_amount": 100.0, "status": "PENDING" },
+        { "id": "b-91", "date": "2026-06-02", "type": "INCOME", "base_amount": 100.0, "status": "INVOICED" },
+        { "id": "b-fut", "date": "2026-09-06", "type": "INCOME", "base_amount": 50.0, "status": "PENDING" },
+        { "id": "b-x1", "date": "2026-05-01", "type": "INCOME", "base_amount": 50000.0, "status": "CLEARED" },
+        { "id": "b-x2", "date": "2026-05-01", "type": "EXPENSE", "base_amount": 5000.0, "status": "INVOICED" }
+      ],
+      "expected": {
+        "current_0_30": 250.0,
+        "pending_31_60": 200.0,
+        "overdue_61_90": 200.0,
+        "critical_90_plus": 100.0,
+        "total_receivable": 750.0,
+        "traffic_light": "RED"
+      }
+    },
+    {
+      "name": "green",
+      "transactions": [
+        { "id": "g-1", "date": "2026-08-22", "type": "INCOME", "base_amount": 3000.0, "status": "INVOICED" },
+        { "id": "g-2", "date": "2026-07-18", "type": "INCOME", "base_amount": 4000.0, "status": "PENDING" }
+      ],
+      "expected": {
+        "current_0_30": 3000.0,
+        "pending_31_60": 4000.0,
+        "overdue_61_90": 0.0,
+        "critical_90_plus": 0.0,
+        "total_receivable": 7000.0,
+        "traffic_light": "GREEN"
+      }
+    },
+    {
+      "name": "yellow",
+      "transactions": [
+        { "id": "g-1", "date": "2026-08-22", "type": "INCOME", "base_amount": 3000.0, "status": "INVOICED" },
+        { "id": "g-2", "date": "2026-07-18", "type": "INCOME", "base_amount": 4000.0, "status": "PENDING" },
+        { "id": "y-1", "date": "2026-06-18", "type": "INCOME", "base_amount": 2500.0, "status": "INVOICED" }
+      ],
+      "expected": {
+        "current_0_30": 3000.0,
+        "pending_31_60": 4000.0,
+        "overdue_61_90": 2500.0,
+        "critical_90_plus": 0.0,
+        "total_receivable": 9500.0,
+        "traffic_light": "YELLOW"
+      }
+    },
+    {
+      "name": "red",
+      "transactions": [
+        { "id": "g-1", "date": "2026-08-22", "type": "INCOME", "base_amount": 3000.0, "status": "INVOICED" },
+        { "id": "g-2", "date": "2026-07-18", "type": "INCOME", "base_amount": 4000.0, "status": "PENDING" },
+        { "id": "y-1", "date": "2026-06-18", "type": "INCOME", "base_amount": 2500.0, "status": "INVOICED" },
+        { "id": "r-1", "date": "2026-05-04", "type": "INCOME", "base_amount": 1200.0, "status": "INVOICED" }
+      ],
+      "expected": {
+        "current_0_30": 3000.0,
+        "pending_31_60": 4000.0,
+        "overdue_61_90": 2500.0,
+        "critical_90_plus": 1200.0,
+        "total_receivable": 10700.0,
+        "traffic_light": "RED"
+      }
+    }
+  ]
+}
